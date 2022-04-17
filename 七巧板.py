@@ -1,7 +1,7 @@
 import sys
 from random import randint
 from math import sqrt
-from PIL import ImageGrab
+from PIL import ImageGrab  # Save截图用到的库
 
 from PyQt5 import uic
 from PyQt5.QtCore import QPointF, Qt
@@ -9,23 +9,23 @@ from PyQt5.QtGui import QBrush, QPolygonF
 from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QGraphicsPolygonItem, QGraphicsRectItem, QGraphicsItem, \
     QApplication
 
+
 # pyinstaller -F -i D:/python_project/something_interesting/选修课/zuoye/zuoye5/myico.ico -w  七巧板.py
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow):  # 主窗口
     def __init__(self):
         super().__init__()
-        uic.loadUi('qqb.ui', self)
+        uic.loadUi('qqb.ui', self)  # 导入ui文件
         self.scene = QGraphicsScene(0, 0, 400, 400)
         self.graphicsView.setScene(self.scene)
-        self.init_shapes()
-        self.Rotate1.clicked.connect(self.onRotate1)
-        self.Rotate2.clicked.connect(self.onRotate2)
-        self.Shuffle.clicked.connect(self.onShuffle)
-        self.save.triggered.connect(self.screenshot)
-        self.close1.triggered.connect(self.close)
-        # self.MoveUp.clicked.connect(self.onMoveUp)
-        # self.pushButtonMoveDown.clicked.connect(self.onMoveDown)
+        self.init_shapes()  # 初始化七巧板
+        self.Rotate1.clicked.connect(self.onRotate1)  # 旋转1
+        self.Rotate2.clicked.connect(self.onRotate2)  # 旋转2
+        self.Shuffle.clicked.connect(self.onShuffle)  # 打乱
+        self.save.triggered.connect(self.screenshot)  # 窗口截图
+        self.close1.triggered.connect(self.close)  # 关闭程序
 
+    # 画三边形
     def draw_polygon3(self, x1, y1, x2, y2, x3, y3, x, y, color=0):
         polygon3 = QGraphicsPolygonItem(QPolygonF([QPointF(x1, y1), QPointF(x2, y2), QPointF(x3, y3)]))
         if color == 1:
@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         polygon3.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.scene.addItem(polygon3)
 
+    # 画四边形
     def draw_polygon4(self, x1, y1, x2, y2, x3, y3, x4, y4, x, y):
         polygon4 = QGraphicsPolygonItem(QPolygonF([QPointF(x1, y1), QPointF(x2, y2), QPointF(x3, y3), QPointF(x4, y4)]))
         polygon4.setBrush(QBrush(Qt.blue))
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow):
         polygon4.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.scene.addItem(polygon4)
 
+    # 画矩形
     def draw_rect(self, x1, y1, x2, y2, x, y):
         rect = QGraphicsRectItem(x1, y1, x2, y2)
         rect.setBrush(QBrush(Qt.yellow))
@@ -52,7 +54,7 @@ class MainWindow(QMainWindow):
         rect.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
         self.scene.addItem(rect)
 
-    # x:-300~500, y:-100~300
+    # 画图范围：x:-300~500, y:-100~300
     def init_shapes(self):
         self.draw_polygon3(0, 0, 0, 200, 200, 200, randint(-300, 500), randint(-100, 300), 1)  # 三角形1
         self.draw_polygon3(0, 0, 0, 200, 200, 200, randint(-300, 500), randint(-100, 300))  # 三角形2
@@ -75,8 +77,8 @@ class MainWindow(QMainWindow):
             item.setRotation(-45 + item.rotation())
 
     def onShuffle(self, evt):
-        self.scene.clear()
-        self.init_shapes()
+        self.scene.clear()  # 清理屏幕
+        self.init_shapes()  # 重新生成
 
     def screenshot(self):
         pic = ImageGrab.grab(bbox=(self.window().x(), self.window().y(),
@@ -88,6 +90,7 @@ class MainWindow(QMainWindow):
         self.window().close()
 
 
+# 运行程序
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
